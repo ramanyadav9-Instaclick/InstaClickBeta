@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #F7F4EB; /* Premium Cream background */
+    color: #1A1A1A;
+    font-family: sans-serif;
+  }
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  height: 6px;
+}
+.scrollbar-hidden::-webkit-scrollbar-thumb {
+  background: #C5A880;
+  border-radius: 10px;
+}
