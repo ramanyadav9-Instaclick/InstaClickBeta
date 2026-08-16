@@ -78,8 +78,8 @@ export default function Scheduler({ checkDate, setCheckDate, checkTime, setCheck
           <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center space-x-4 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.05)]">
             <CalendarCheck className="w-6 h-6 shrink-0 animate-bounce" />
             <div className="text-xs font-mono">
-              <span className="font-black uppercase tracking-wider text-white block mb-0.5">Slots Available Node Confirmed ✅</span>
-              Our camera gears & crew allocation pipelines are fully vacant. Proceed to secure instant deployment now.
+              <span className="font-black uppercase tracking-wider text-white block mb-0.5">Slots Available ✅</span>
+              Our Team is available for this Selected Slot.
             </div>
           </div>
         )}

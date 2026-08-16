@@ -1,21 +1,59 @@
 "use client";
 import React, { useState } from "react";
-import { X, Send, Phone, Mail, User, MessageSquare } from "lucide-react";
+import { X, Send, Phone, Mail, User, MessageSquare, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient"; // Make sure path matches your project structure
 
 export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      onClose();
-      setFormData({ name: "", phone: "", email: "", message: "" });
-    }, 2000);
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      // 📥 Insert inquiry data straight into Supabase Database
+      const { error } = await supabase.from("contact_inquiries").insert([
+        {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          message: formData.message,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) {
+        // Fallback table name check in case your table is named 'contacts'
+        const { error: fallbackError } = await supabase.from("contacts").insert([
+          {
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            message: formData.message,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+        if (fallbackError) throw fallbackError;
+      }
+
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        onClose();
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      }, 2000);
+    } catch (err: any) {
+      console.error("Supabase Contact Insert Error:", err);
+      setErrorMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +77,12 @@ export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onC
             Get custom packages & full pricing quotes instantly.
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-mono">
+            {errorMessage}
+          </div>
+        )}
 
         {isSubmitted ? (
           <div className="py-8 text-center space-y-2">
@@ -118,10 +162,20 @@ export default function ContactModal({ isOpen, onClose }: { isOpen: boolean; onC
 
             <button
               type="submit"
-              className="w-full py-3 bg-[#00E5FF] text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:scale-102 transition-all flex items-center justify-center space-x-2 mt-2"
+              disabled={loading}
+              className="w-full py-3 bg-[#00E5FF] text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:scale-102 transition-all flex items-center justify-center space-x-2 mt-2 disabled:opacity-50"
             >
-              <span>Submit Inquiry</span>
-              <Send className="w-3.5 h-3.5" />
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <>
+                  <span>Submit Inquiry</span>
+                  <Send className="w-3.5 h-3.5" />
+                </>
+              )}
             </button>
           </form>
         )}

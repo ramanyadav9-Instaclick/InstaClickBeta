@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { X, User, Phone, Mail, MapPin, ShieldCheck } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, User, Phone, Mail, MapPin, ShieldCheck, Clock, AlertTriangle } from "lucide-react";
 
 interface AuthPopupProps {
   isOpen: boolean;
@@ -27,6 +27,8 @@ interface AuthPopupProps {
   resetAuthFields: () => void;
 }
 
+const MAX_DAILY_OTP = 5;
+
 export default function AuthPopup({
   isOpen,
   onClose,
@@ -51,6 +53,67 @@ export default function AuthPopup({
   handleDeleteAccountSubmit,
   resetAuthFields,
 }: AuthPopupProps) {
+  // ⏱️ 60-Second Timer & Limit States
+  const [countdown, setCountdown] = useState(0);
+  const [dailyOtpCount, setDailyOtpCount] = useState(0);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+
+  // Check Daily OTP Count for Entered Phone from LocalStorage
+  useEffect(() => {
+    if (!phone || phone.length < 10) return;
+    const cleanNum = phone.replace(/\D/g, "").slice(-10);
+    const today = new Date().toISOString().split("T")[0];
+    const key = `otp_attempts_${cleanNum}_${today}`;
+    const attempts = parseInt(localStorage.getItem(key) || "0", 10);
+    setDailyOtpCount(attempts);
+    setIsLimitReached(attempts >= MAX_DAILY_OTP);
+  }, [phone, isOpen]);
+
+  // Live Timer Countdown Effect
+  useEffect(() => {
+    let timer: any;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  // Trigger Login OTP with Counter & Timer
+  const onLoginOtpClick = () => {
+    if (isLimitReached || countdown > 0) return;
+
+    const cleanNum = phone.replace(/\D/g, "").slice(-10);
+    const today = new Date().toISOString().split("T")[0];
+    const key = `otp_attempts_${cleanNum}_${today}`;
+    const newCount = dailyOtpCount + 1;
+
+    localStorage.setItem(key, newCount.toString());
+    setDailyOtpCount(newCount);
+    if (newCount >= MAX_DAILY_OTP) setIsLimitReached(true);
+
+    setCountdown(60);
+    handleLoginRequestOtp();
+  };
+
+  // Trigger Signup OTP with Counter & Timer
+  const onSignupOtpClick = () => {
+    if (isLimitReached || countdown > 0) return;
+
+    const cleanNum = phone.replace(/\D/g, "").slice(-10);
+    const today = new Date().toISOString().split("T")[0];
+    const key = `otp_attempts_${cleanNum}_${today}`;
+    const newCount = dailyOtpCount + 1;
+
+    localStorage.setItem(key, newCount.toString());
+    setDailyOtpCount(newCount);
+    if (newCount >= MAX_DAILY_OTP) setIsLimitReached(true);
+
+    setCountdown(60);
+    handleSignupRequestOtp();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -86,9 +149,10 @@ export default function AuthPopup({
           <button
             onClick={() => {
               resetAuthFields();
+              setCountdown(0);
               onClose();
             }}
-            className="absolute top-6 right-6 w-9 h-9 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center text-white hover:bg-[#00E5FF] hover:text-black transition-all"
+            className="p-2 w-9 h-9 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center text-white hover:bg-[#00E5FF] hover:text-black transition-all absolute top-6 right-6 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -99,9 +163,10 @@ export default function AuthPopup({
               <button
                 onClick={() => {
                   resetAuthFields();
+                  setCountdown(0);
                   setAuthView("login");
                 }}
-                className={`text-xs font-black tracking-wider uppercase pb-1 transition-all ${
+                className={`text-xs font-black tracking-wider uppercase pb-1 transition-all cursor-pointer ${
                   authView === "login"
                     ? "text-[#00E5FF] border-b-2 border-[#00E5FF]"
                     : "text-gray-400 hover:text-white"
@@ -112,9 +177,10 @@ export default function AuthPopup({
               <button
                 onClick={() => {
                   resetAuthFields();
+                  setCountdown(0);
                   setAuthView("signup");
                 }}
-                className={`text-xs font-black tracking-wider uppercase pb-1 transition-all ${
+                className={`text-xs font-black tracking-wider uppercase pb-1 transition-all cursor-pointer ${
                   authView === "signup"
                     ? "text-[#00E5FF] border-b-2 border-[#00E5FF]"
                     : "text-gray-400 hover:text-white"
@@ -128,6 +194,14 @@ export default function AuthPopup({
           {authError && (
             <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs font-mono">
               ⚠️ {authError}
+            </div>
+          )}
+
+          {/* 🛑 Limit Warning Alert */}
+          {isLimitReached && (
+            <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-300 text-xs font-mono flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+              <span>Daily limit reached ({dailyOtpCount}/{MAX_DAILY_OTP} OTPs). Please try after 24 hours.</span>
             </div>
           )}
 
@@ -174,21 +248,50 @@ export default function AuthPopup({
                 </div>
               )}
 
+              {/* Countdown & Limit Protected Button */}
               {!otpSent ? (
                 <button
                   type="button"
-                  onClick={handleLoginRequestOtp}
-                  className="w-full bg-[#16202c] hover:bg-[#00E5FF] hover:text-black text-gray-300 font-mono font-bold text-xs uppercase py-3.5 rounded-xl transition-all border border-white/5 mt-4"
+                  disabled={isLimitReached || countdown > 0}
+                  onClick={onLoginOtpClick}
+                  className="w-full bg-[#16202c] hover:bg-[#00E5FF] hover:text-black disabled:bg-neutral-900 disabled:text-gray-600 disabled:cursor-not-allowed text-gray-300 font-mono font-bold text-xs uppercase py-3.5 rounded-xl transition-all border border-white/5 mt-4 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  SEND LOGIN OTP
+                  {countdown > 0 ? (
+                    <>
+                      <Clock className="w-4 h-4 text-[#00E5FF] animate-pulse" />
+                      <span>Resend OTP in {countdown}s</span>
+                    </>
+                  ) : (
+                    <span>SEND LOGIN OTP {dailyOtpCount > 0 && `(${dailyOtpCount}/${MAX_DAILY_OTP})`}</span>
+                  )}
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  className="w-full bg-[#00E5FF] text-black font-mono font-extrabold text-xs uppercase py-3.5 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:scale-[1.01] transition-all mt-4"
-                >
-                  VERIFY & LOGIN
-                </button>
+                <div className="space-y-2 mt-4">
+                  <button
+                    type="submit"
+                    className="w-full bg-[#00E5FF] text-black font-mono font-extrabold text-xs uppercase py-3.5 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:scale-[1.01] transition-all cursor-pointer"
+                  >
+                    VERIFY & LOGIN
+                  </button>
+
+                  {/* Resend button with countdown inside OTP view */}
+                  <div className="text-center pt-2">
+                    {countdown > 0 ? (
+                      <span className="text-xs text-gray-400 font-mono flex items-center justify-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#00E5FF] animate-pulse" /> Resend OTP in <strong className="text-[#00E5FF]">{countdown}s</strong>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={isLimitReached}
+                        onClick={onLoginOtpClick}
+                        className="text-xs text-[#00E5FF] hover:underline font-mono font-bold cursor-pointer disabled:text-gray-600 disabled:cursor-not-allowed"
+                      >
+                        Didn't receive OTP? Resend Now
+                      </button>
+                    )}
+                  </div>
+                </div>
               )}
             </form>
           )}
@@ -287,21 +390,49 @@ export default function AuthPopup({
                 </div>
               )}
 
+              {/* Countdown & Limit Protected Button for Signup */}
               {!otpSent ? (
                 <button
                   type="button"
-                  onClick={handleSignupRequestOtp}
-                  className="w-full bg-[#16202c] hover:bg-[#00E5FF] hover:text-black text-gray-300 font-mono font-bold text-xs uppercase py-3 rounded-xl transition-all border border-white/5 mt-2"
+                  disabled={isLimitReached || countdown > 0}
+                  onClick={onSignupOtpClick}
+                  className="w-full bg-[#16202c] hover:bg-[#00E5FF] hover:text-black disabled:bg-neutral-900 disabled:text-gray-600 disabled:cursor-not-allowed text-gray-300 font-mono font-bold text-xs uppercase py-3 rounded-xl transition-all border border-white/5 mt-2 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  SEND SIGN UP OTP
+                  {countdown > 0 ? (
+                    <>
+                      <Clock className="w-4 h-4 text-[#00E5FF] animate-pulse" />
+                      <span>Resend OTP in {countdown}s</span>
+                    </>
+                  ) : (
+                    <span>SEND SIGN UP OTP {dailyOtpCount > 0 && `(${dailyOtpCount}/${MAX_DAILY_OTP})`}</span>
+                  )}
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  className="w-full bg-[#00E5FF] text-black font-mono font-extrabold text-xs uppercase py-3 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:scale-[1.01] transition-all mt-2"
-                >
-                  CREATE ACCOUNT
-                </button>
+                <div className="space-y-2 mt-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-[#00E5FF] text-black font-mono font-extrabold text-xs uppercase py-3 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:scale-[1.01] transition-all cursor-pointer"
+                  >
+                    CREATE ACCOUNT
+                  </button>
+
+                  <div className="text-center pt-1">
+                    {countdown > 0 ? (
+                      <span className="text-xs text-gray-400 font-mono flex items-center justify-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#00E5FF] animate-pulse" /> Resend in <strong className="text-[#00E5FF]">{countdown}s</strong>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={isLimitReached}
+                        onClick={onSignupOtpClick}
+                        className="text-xs text-[#00E5FF] hover:underline font-mono font-bold cursor-pointer disabled:text-gray-600 disabled:cursor-not-allowed"
+                      >
+                        Didn't receive OTP? Resend Now
+                      </button>
+                    )}
+                  </div>
+                </div>
               )}
             </form>
           )}
@@ -331,7 +462,7 @@ export default function AuthPopup({
 
               <button
                 type="submit"
-                className="w-full bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs uppercase py-3 rounded-xl transition-all"
+                className="w-full bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs uppercase py-3 rounded-xl transition-all cursor-pointer"
               >
                 CONFIRM PERMANENT DELETE
               </button>
