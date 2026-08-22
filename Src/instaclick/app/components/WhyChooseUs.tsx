@@ -12,8 +12,8 @@ export default function WhyChooseUs() {
           <div className="w-12 h-12 bg-white text-[#00E5FF] border border-neutral-800 rounded-xl flex items-center justify-center shadow-md group-hover:border-[#00E5FF] transition-colors duration-300">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <h4 className="font-serif font-bold text-lg text-white">100% Payment Safety</h4>
-          <p className="text-xs text-gray-400 leading-relaxed max-w-sm">🔒 Your transactions are fully encrypted. Pay securely via advanced multi-UPI frameworks and trusted Razorpay merchant nodes.</p>
+          <h4 className="font-serif font-bold text-lg text-white">100% Secure Booking</h4>
+          <p className="text-xs text-gray-400 leading-relaxed max-w-sm">🔒 Book trusted photography & videography professionals with secure payments and transparent pricing.</p>
         </div>
 
         {/* Premium Quality & Instant Service without any company names */}
@@ -21,8 +21,8 @@ export default function WhyChooseUs() {
           <div className="w-12 h-12 bg-white text-[#00E5FF] border border-neutral-800 rounded-xl flex items-center justify-center shadow-md group-hover:border-[#00E5FF] transition-colors duration-300">
             <Award className="w-6 h-6" />
           </div>
-          <h4 className="font-serif font-bold text-lg text-white">Instant Service & Quality</h4>
-          <p className="text-xs text-gray-400 leading-relaxed max-w-sm">⚡ Urgent emergency booking? We provide high-speed instant deployment nodes to arrive at your venue within 2-3 hours and commence shooting immediately!</p>
+          <h4 className="font-serif font-bold text-lg text-white">Instant Booking & Fast Response</h4>
+          <p className="text-xs text-gray-400 leading-relaxed max-w-sm">⚡ Urgent emergency booking? Find and book the right photographer or videographer quickly for your event, shoot or special occasion!</p>
         </div>
 
         {/* Rapid Assets Dispatch */}
@@ -30,8 +30,8 @@ export default function WhyChooseUs() {
           <div className="w-12 h-12 bg-white text-[#00E5FF] border border-neutral-800 rounded-xl flex items-center justify-center shadow-md group-hover:border-[#00E5FF] transition-colors duration-300">
             <Zap className="w-6 h-6" />
           </div>
-          <h4 className="font-serif font-bold text-lg text-white">Rapid Assets Dispatch</h4>
-          <p className="text-xs text-gray-400 leading-relaxed max-w-sm">⚡ Industry-leading fast delivery timelines. Get your clean, formatted digital assets ready and dispatched within 15 days.</p>
+          <h4 className="font-serif font-bold text-lg text-white">Professional Quality & On-Time Delivery</h4>
+          <p className="text-xs text-gray-400 leading-relaxed max-w-sm">⚡ Enjoy professionally captured and edited photos and videos, delivered within the promised timeline.</p>
         </div>
 
       </div>

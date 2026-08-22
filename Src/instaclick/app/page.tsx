@@ -81,13 +81,15 @@ export default function Home() {
 
   const [bookings, setBookings] = useState<any[]>([]);
 
+  // 🚀 Dynamic Slide Interval: 1st slide stays for 30s (from DataStore duration), others for 5s
   useEffect(() => {
-    const timer = setInterval(() => {
+    const duration = (slides[currentSlide] as any)?.duration || (currentSlide === 0 ? 30000 : 5000);
+    const timer = setTimeout(() => {
       setDirection(1);
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    }, duration);
+    return () => clearTimeout(timer);
+  }, [currentSlide]);
 
   // 📥 Fetch User Bookings from Supabase (With cancelled_by Mapping)
   const fetchUserBookings = useCallback(async (userPhone: string) => {
@@ -505,8 +507,14 @@ export default function Home() {
         slides={slides}
         currentSlide={currentSlide}
         direction={direction}
-        handlePrev={() => setCurrentSlide((p) => (p - 1 + slides.length) % slides.length)}
-        handleNext={() => setCurrentSlide((p) => (p + 1) % slides.length)}
+        handlePrev={() => {
+          setDirection(-1);
+          setCurrentSlide((p) => (p - 1 + slides.length) % slides.length);
+        }}
+        handleNext={() => {
+          setDirection(1);
+          setCurrentSlide((p) => (p + 1) % slides.length);
+        }}
         setIsGalleryOpen={() => {}}
         scrollToServices={() => servicesSectionRef.current?.scrollIntoView({ behavior: "smooth" })}
       />
