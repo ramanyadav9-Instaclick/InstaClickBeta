@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const bookingId = `INSTA-${randomDigits}`;
 
     // 3. Calculate Advance vs Total Rules
-    const isAdvanceDisabled = totalPrice <= 2000;
+    const isAdvanceDisabled = totalPrice <= 40000;
     const isAdvanceMode = paymentMode === "advance" && !isAdvanceDisabled;
     const advancePaid = isAdvanceMode ? Math.round(totalPrice * 0.2) : totalPrice;
     const remainingAmount = totalPrice - advancePaid;

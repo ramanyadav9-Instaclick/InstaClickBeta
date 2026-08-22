@@ -24,37 +24,37 @@ export const galleryImages = [
   { tag: "Maternity Tender Shoot", url: "https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=600&q=80" }
 ];
 
-export const subPackages: Record<string, Array<{name: string, price: number, rating: number, img: string}>> = {
+export const subPackages: Record<string, Array<{name: string, price: number, displayPrice: string, rating: number, img: string}>> = {
   photography: [
-    { name: "Baby Shoot", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=400&q=80" },
-    { name: "Wedding Shoot", price:2000, rating: 4.9, img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80" },
-    { name: "Pre Wedding", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1519225495810-7512c696505a?auto=format&fit=crop&w=400&q=80" },
-    { name: "Maternity", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=400&q=80" },
-    { name: "Fashion Portfolio", price: 2000, rating: 4.7, img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=400&q=80" },
-    { name: "Product Shoot", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" },
-    { name: "Engagement Cover", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=400&q=80" },
-    { name: "Outdoor Cinematic", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&q=80" }
+    { name: "Baby Shoot", price: 1499, displayPrice: "Starting ₹1499", rating: 4.9, img: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80" },
+    { name: "Wedding Shoot", price: 3499, displayPrice: "Starting ₹3499", rating: 4.9, img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80" },
+    { name: "Pre Wedding", price: 3499, displayPrice: "Starting ₹3499", rating: 4.8, img: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=600&q=80" },
+    { name: "Maternity", price: 2999, displayPrice: "Starting ₹2999", rating: 4.9, img: "https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=400&q=80" },
+    { name: "Fashion Portfolio", price: 2499, displayPrice: "Starting ₹2499", rating: 4.7, img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=400&q=80" },
+    { name: "Product Shoot", price: 1999, displayPrice: "Starting ₹1999", rating: 4.8, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" },
+    { name: "Engagement Cover", price: 1999, displayPrice: "Starting ₹1999", rating: 4.9, img: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=400&q=80" },
+    { name: "Outdoor Cinematic", price: 2999, displayPrice: "Starting ₹2999", rating: 4.8, img: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&q=80" }
   ],
   videography: [
-    { name: "Wedding Film", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=400&q=80" },
-    { name: "Cinematic Video", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" },
-    { name: "Corporate Film", price: 2000, rating: 4.7, img: "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?auto=format&fit=crop&w=400&q=80" },
-    { name: "Reel Shoot", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" },
-    { name: "Music Video", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80" }
+    { name: "Wedding Film", price: 3499, displayPrice: "Starting ₹3499", rating: 4.9, img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=400&q=80" },
+    { name: "Cinematic Video", price: 2999, displayPrice: "Starting ₹2999", rating: 4.8, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" },
+    { name: "Corporate Film", price: 3999, displayPrice: "Starting ₹3999", rating: 4.7, img: "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?auto=format&fit=crop&w=400&q=80" },
+    { name: "Reel Shoot", price: 499, displayPrice: "Starting ₹499", rating: 4.9, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" },
+    { name: "Music Video", price: 9999, displayPrice: "Starting ₹9999", rating: 4.8, img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80" }
   ],
   drone: [
-    { name: "Wedding Drone", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=400&q=80" },
-    { name: "Resort Feature", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80" },
-    { name: "Real Estate Drone", price: 2000, rating: 4.7, img: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=400&q=80" },
-    { name: "Farm Shoot", price: 2000, rating: 4.6, img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80" },
-    { name: "Construction Cam", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=400&q=80" }
+    { name: "Wedding Drone", price: 2499, displayPrice: "Starting ₹2499", rating: 4.9, img: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=400&q=80" },
+    { name: "Resort Feature", price: 1999, displayPrice: "Starting ₹1999", rating: 4.8, img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80" },
+    { name: "Real Estate Drone", price: 1999, displayPrice: "Starting ₹1999", rating: 4.7, img: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=400&q=80" },
+    { name: "Farm Shoot", price: 2999, displayPrice: "Starting ₹2999", rating: 4.6, img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80" },
+    { name: "Construction Cam", price: 2499, displayPrice: "Starting ₹2499", rating: 4.8, img: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=400&q=80" }
   ],
   events: [
-    { name: "Annual Function", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=400&q=80" },
-    { name: "Birthday Bash", price: 2000, rating: 4.8, img: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=400&q=80" },
-    { name: "Anniversary Cover", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80" },
-    { name: "Corporate Summit", price: 2000, rating: 4.7, img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=400&q=80" },
-    { name: "Live Concert Festival", price: 2000, rating: 4.9, img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=400&q=80" }
+    { name: "Annual Function", price: 1999, displayPrice: "Starting ₹1999", rating: 4.8, img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=400&q=80" },
+    { name: "Birthday Bash", price: 1499, displayPrice: "Starting ₹1499", rating: 4.8, img: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=400&q=80" },
+    { name: "Anniversary Cover", price: 2999, displayPrice: "Starting ₹2999", rating: 4.9, img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80" },
+    { name: "Corporate Summit", price: 2999, displayPrice: "Starting ₹2999", rating: 4.7, img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=400&q=80" },
+    { name: "Live Concert Festival", price: 2499, displayPrice: "Starting ₹2499", rating: 4.9, img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=400&q=80" }
   ]
 };
 
@@ -77,44 +77,3 @@ export interface CustomerPayment {
   assetStatus: 'Pending' | 'In Transit' | 'Delivered';
   trackerStatus: 'Order Placed' | 'Dispatched' | 'On the Way' | 'Delivered';
 }
-
-// Initial Mock Data
-export const initialMembers: Member[] = [
-  {
-    id: '1',
-    username: 'superadmin',
-    password: 'adminpassword123',
-    role: 'super_admin',
-    mobileNumber: '9876543210',
-    gmail: 'admin@gmail.com',
-  },
-  {
-    id: '2',
-    username: 'member1',
-    password: 'memberpassword123',
-    role: 'member',
-    mobileNumber: '9123456789',
-    gmail: 'member1@gmail.com',
-  },
-];
-
-export const initialPayments: CustomerPayment[] = [
-  {
-    id: '101',
-    customerName: 'Rahul Sharma',
-    totalAmount: 50000,
-    paidAmount: 30000,
-    dueAmount: 20000,
-    assetStatus: 'In Transit',
-    trackerStatus: 'Dispatched',
-  },
-  {
-    id: '102',
-    customerName: 'Anita Roy',
-    totalAmount: 25000,
-    paidAmount: 25000,
-    dueAmount: 0,
-    assetStatus: 'Delivered',
-    trackerStatus: 'Delivered',
-  },
-];

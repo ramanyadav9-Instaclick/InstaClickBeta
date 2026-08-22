@@ -23,8 +23,8 @@ const generateValidUUID = () => {
   return "123e4567-e89b-12d3-a456-426614174000";
 };
 
-// ⏱️ 24 Hours in Milliseconds
-const SESSION_EXPIRY_MS = 24 * 60 * 60 * 1000;
+// ⏱️ 1 Hour in Milliseconds (Auto Logout after 1 Hour)
+const SESSION_EXPIRY_MS = 1 * 60 * 60 * 1000;
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -144,7 +144,7 @@ export default function Home() {
     }
   }, []);
 
-  // 🔄 Auto Load User Session & 24-HOUR EXPIRY CHECK on Mount
+  // 🔄 Auto Load User Session & 1-HOUR EXPIRY CHECK on Mount
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     const savedLoginTime = localStorage.getItem("user_login_time");
@@ -323,7 +323,6 @@ export default function Home() {
     const cleanNum = phone.replace(/\D/g, "").slice(-10);
 
     try {
-      // Message Central Verify Route Call
       const res = await fetch("/api/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -409,7 +408,6 @@ export default function Home() {
     const cleanNum = phone.replace(/\D/g, "").slice(-10);
 
     try {
-      // Message Central Verify Route Call
       const res = await fetch("/api/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -568,7 +566,6 @@ export default function Home() {
                   const currentStepIndex = b.statusStep || 1;
                   const isCancelled = b.isCancelled || b.trackerStatus === "Cancelled";
                   
-                  // Strict Check: Check who cancelled it
                   const isOfficialCancellation = isCancelled && Boolean(b.cancelledBy && !b.cancelledBy.includes("User"));
 
                   return (
@@ -601,7 +598,7 @@ export default function Home() {
                           <div>
                             <h5 className="text-sm font-black text-rose-400 font-mono uppercase">
                               {isOfficialCancellation 
-                                ? `Your booking was cancelled by ${b.cancelledBy} ⚠️` 
+                                ? `Your booking was cancelled   ⚠️` 
                                 : "Your shoot booking is cancelled ❌"}
                             </h5>
                             <p className="text-xs text-gray-300 mt-0.5">
@@ -665,7 +662,6 @@ export default function Home() {
                           <p>📍 Location: {b.address}</p>
                         </div>
 
-                        {/* USER CANCEL BUTTON */}
                         {!isCancelled && (
                           <button
                             onClick={() => handleCancelBookingByUser(b)}

@@ -58,16 +58,37 @@ export default function AuthPopup({
   const [dailyOtpCount, setDailyOtpCount] = useState(0);
   const [isLimitReached, setIsLimitReached] = useState(false);
 
-  // Check Daily OTP Count for Entered Phone from LocalStorage
+  // 🔍 Check Daily OTP Count strictly for the entered phone number
   useEffect(() => {
-    if (!phone || phone.length < 10) return;
     const cleanNum = phone.replace(/\D/g, "").slice(-10);
-    const today = new Date().toISOString().split("T")[0];
-    const key = `otp_attempts_${cleanNum}_${today}`;
-    const attempts = parseInt(localStorage.getItem(key) || "0", 10);
-    setDailyOtpCount(attempts);
-    setIsLimitReached(attempts >= MAX_DAILY_OTP);
+    if (cleanNum.length === 10) {
+      const today = new Date().toISOString().split("T")[0];
+      const key = `otp_attempts_${cleanNum}_${today}`;
+      const attempts = parseInt(localStorage.getItem(key) || "0", 10);
+      setDailyOtpCount(attempts);
+      setIsLimitReached(attempts >= MAX_DAILY_OTP);
+    } else {
+      setDailyOtpCount(0);
+      setIsLimitReached(false);
+    }
   }, [phone, isOpen]);
+
+  // ⏱️ Start Timer and count OTP ONLY when OTP is actually sent successfully
+  useEffect(() => {
+    if (otpSent) {
+      const cleanNum = phone.replace(/\D/g, "").slice(-10);
+      if (cleanNum.length === 10) {
+        const today = new Date().toISOString().split("T")[0];
+        const key = `otp_attempts_${cleanNum}_${today}`;
+        const attempts = parseInt(localStorage.getItem(key) || "0", 10);
+        const newCount = attempts + 1;
+        localStorage.setItem(key, newCount.toString());
+        setDailyOtpCount(newCount);
+        if (newCount >= MAX_DAILY_OTP) setIsLimitReached(true);
+      }
+      setCountdown(60);
+    }
+  }, [otpSent]);
 
   // Live Timer Countdown Effect
   useEffect(() => {
@@ -80,37 +101,15 @@ export default function AuthPopup({
     return () => clearInterval(timer);
   }, [countdown]);
 
-  // Trigger Login OTP with Counter & Timer
+  // Trigger Login OTP (Checks limits first, timer starts only after successful OTP dispatch)
   const onLoginOtpClick = () => {
     if (isLimitReached || countdown > 0) return;
-
-    const cleanNum = phone.replace(/\D/g, "").slice(-10);
-    const today = new Date().toISOString().split("T")[0];
-    const key = `otp_attempts_${cleanNum}_${today}`;
-    const newCount = dailyOtpCount + 1;
-
-    localStorage.setItem(key, newCount.toString());
-    setDailyOtpCount(newCount);
-    if (newCount >= MAX_DAILY_OTP) setIsLimitReached(true);
-
-    setCountdown(60);
     handleLoginRequestOtp();
   };
 
-  // Trigger Signup OTP with Counter & Timer
+  // Trigger Signup OTP (Checks limits first, timer starts only after successful OTP dispatch)
   const onSignupOtpClick = () => {
     if (isLimitReached || countdown > 0) return;
-
-    const cleanNum = phone.replace(/\D/g, "").slice(-10);
-    const today = new Date().toISOString().split("T")[0];
-    const key = `otp_attempts_${cleanNum}_${today}`;
-    const newCount = dailyOtpCount + 1;
-
-    localStorage.setItem(key, newCount.toString());
-    setDailyOtpCount(newCount);
-    if (newCount >= MAX_DAILY_OTP) setIsLimitReached(true);
-
-    setCountdown(60);
     handleSignupRequestOtp();
   };
 
@@ -239,10 +238,10 @@ export default function AuthPopup({
                   <input
                     type="text"
                     required
-                    maxLength={6}
+                    maxLength={4}
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter 6 digit OTP"
+                    placeholder="Enter 4 digit OTP"
                     className="w-full bg-black border border-white/10 rounded-xl px-3 py-3 text-xs text-white placeholder-gray-600 focus:border-[#00E5FF] outline-none font-mono tracking-widest"
                   />
                 </div>
@@ -310,7 +309,7 @@ export default function AuthPopup({
                     required
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
-                    placeholder="Rahul Sharma"
+                    placeholder="Enter your full name"
                     className="w-full bg-black border border-white/10 rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder-gray-600 focus:border-[#00E5FF] outline-none font-mono"
                   />
                 </div>
@@ -381,10 +380,10 @@ export default function AuthPopup({
                   <input
                     type="text"
                     required
-                    maxLength={6}
+                    maxLength={4}
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter 6 digit OTP"
+                    placeholder="Enter 4 digit OTP"
                     className="w-full bg-black border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-600 focus:border-[#00E5FF] outline-none font-mono tracking-widest"
                   />
                 </div>

@@ -4,6 +4,23 @@ import { CalendarCheck, ShieldAlert, Sparkles, Clock } from "lucide-react";
 
 export default function Scheduler({ checkDate, setCheckDate, checkTime, setCheckTime, availabilityStatus, setAvailabilityStatus }: any) {
   
+  // 1. आज की तारीख (YYYY-MM-DD)
+  const todayStr = new Date().toISOString().split("T")[0];
+
+  // 2. 2 घंटे का लॉकआउट चेक लॉजिक
+  const isTimeSlotDisabled = (hour: number) => {
+    if (checkDate !== todayStr) return false; // अगर कल या आगे की डेट है तो सारे स्लॉट चालू रहेंगे
+
+    const now = new Date();
+    // वर्तमान समय + 2 घंटे
+    const minAllowedTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+
+    const slotTime = new Date();
+    slotTime.setHours(hour, 0, 0, 0);
+
+    return slotTime < minAllowedTime; // 2 घंटे के अंदर का स्लॉट ब्लॉक
+  };
+
   const handleCheckAvailability = () => {
     if (!checkDate) {
       alert("Please specify a valid operational date node.");
@@ -14,7 +31,7 @@ export default function Scheduler({ checkDate, setCheckDate, checkTime, setCheck
     // You can replace this random generator logic with your real database booking array count later
     const simulatedBookingsCount = Math.floor(Math.random() * 15); 
 
-    if (simulatedBookingsCount >= 8) {
+    if (simulatedBookingsCount >=50) {
       setAvailabilityStatus("booked"); // Triggers ALL SLOTS BOOKED structural layout
     } else {
       setAvailabilityStatus("available"); // Triggers Slots Available layout
@@ -35,12 +52,17 @@ export default function Scheduler({ checkDate, setCheckDate, checkTime, setCheck
       {/* 🛠️ ENHANCED CYBER TEXTURED INPUT FORM CONTAINER */}
       <div className="bg-neutral-900/60 border border-white/5 backdrop-blur-xl p-6 rounded-[24px] shadow-2xl flex flex-col md:flex-row gap-4 items-center justify-between">
         
-        {/* Date Node Selector Input */}
+        {/* Date Node Selector Input (min={todayStr} से पुरानी तारीखें ब्लॉक) */}
         <div className="w-full relative">
           <input 
             type="date" 
+            min={todayStr}
             value={checkDate}
-            onChange={(e) => { setCheckDate(e.target.value); setAvailabilityStatus("idle"); }}
+            onChange={(e) => { 
+              setCheckDate(e.target.value); 
+              setCheckTime(""); // डेट बदलने पर टाइम रीसेट ताकि कोई अवैध स्लॉट न रहे
+              setAvailabilityStatus("idle"); 
+            }}
             className="w-full p-3.5 pl-4 bg-black border border-neutral-800 rounded-xl text-white text-sm font-bold focus:outline-none focus:border-[#00E5FF] transition-all [color-scheme:dark]" 
           />
         </div>
@@ -56,8 +78,26 @@ export default function Scheduler({ checkDate, setCheckDate, checkTime, setCheck
             {Array.from({ length: 24 }, (_, i) => {
               const h = i + 1;
               const val = h < 10 ? `0${h}:00` : `${h}:00`;
-              const label = h <= 12 ? `${h}:00 AM` : `${h - 12}:00 PM`;
-              return <option key={val} value={val} className="bg-neutral-950 text-white">{label}</option>;
+              
+              // 12-Hour format labels
+              let label = "";
+              if (h === 24 || h === 0) label = "12:00 AM";
+              else if (h === 12) label = "12:00 PM";
+              else if (h > 12) label = `${h - 12}:00 PM`;
+              else label = `${h}:00 AM`;
+
+              const disabled = isTimeSlotDisabled(h);
+
+              return (
+                <option 
+                  key={val} 
+                  value={val} 
+                  disabled={disabled}
+                  className={disabled ? "bg-neutral-900 text-neutral-600 font-normal" : "bg-neutral-950 text-white"}
+                >
+                  {label} {disabled ? "(Unavailable - Min 2 hrs advance)" : ""}
+                </option>
+              );
             })}
           </select>
         </div>

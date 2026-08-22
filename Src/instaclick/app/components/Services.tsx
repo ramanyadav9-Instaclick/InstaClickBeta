@@ -93,7 +93,7 @@ export default function Services({ mainServices, subPackages, activeCategory, se
                        </div>
                        
                        <div className="flex justify-between items-center mt-6 pt-3 border-t border-white/5">
-                          <span className="text-[#00E5FF] text-sm font-black">₹{pkg.price.toLocaleString()}</span>
+                          <span className="text-[#00E5FF] text-sm font-black">Starting ₹{pkg.price.toLocaleString()}</span>
                           <button 
                             onClick={() => handleSoftAddToCart(pkg)} 
                             className="px-4 py-1.5 bg-[#00E5FF] text-black font-black rounded-lg text-[11px] hover:scale-105 transition-transform"

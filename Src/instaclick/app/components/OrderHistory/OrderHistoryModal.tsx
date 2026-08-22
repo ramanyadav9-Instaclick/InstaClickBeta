@@ -93,9 +93,9 @@ export default function OrderHistoryModal({
   // Amount & Dues Calculations
   const total = activeBooking?.totalAmount || 0;
   
-  // Rule Check: अगर ₹2001 से कम है या 100% full payment हो चुका है -> No Dues
-  const isUnder2001Limit = total < 2001;
-  const isFullyPaid = activeBooking?.paymentStatus === "100_full" || isUnder2001Limit || (activeBooking?.remainingAmount === 0);
+  // Rule Check: अगर ₹40001 से कम है या 100% full payment हो चुका है -> No Dues
+  const isUnder40001Limit = total < 40001;
+  const isFullyPaid = activeBooking?.paymentStatus === "100_full" || isUnder40001Limit || (activeBooking?.remainingAmount === 0);
 
   const advance = isFullyPaid ? total : (activeBooking?.advancePaid || Math.round(total * 0.2));
   const remaining = isFullyPaid ? 0 : (activeBooking?.remainingAmount ?? (total - advance));
