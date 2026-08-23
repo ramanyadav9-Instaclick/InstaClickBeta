@@ -130,7 +130,7 @@ export default function Scheduler({ checkDate, setCheckDate, checkTime, setCheck
             <ShieldAlert className="w-6 h-6 shrink-0 text-rose-500 animate-pulse" />
             <div className="text-xs font-mono">
               <span className="font-black uppercase tracking-wider text-rose-500 block mb-0.5">All Slots Booked ❌</span>
-              Daily booking capacity allocation index limits (Max 8 Shoots/Day) reached for this timeline node. Try picking another operational date interface.
+              Daily booking capacity  limits reached for this timeline . Try picking another operational date interface.
             </div>
           </div>
         )}

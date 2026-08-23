@@ -41,7 +41,7 @@ export default function CartPage({
 
   // Total Price & Calculations
   const totalPrice = (cart || []).reduce((acc: number, item: any) => acc + (item.price || 0), 0);
-  const isAdvanceDisabled = totalPrice <= 2000;
+  const isAdvanceDisabled = totalPrice <= 10000;
 
   // Safe effective payment mode (No bad setState or Hook sequence mismatch)
   const currentPaymentMode = isAdvanceDisabled ? "full" : paymentMode;

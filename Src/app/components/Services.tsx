@@ -22,13 +22,14 @@ export default function Services({ mainServices, subPackages, activeCategory, se
             return (
               <div 
                 key={srv.id} 
-                className="group relative h-[400px] border border-white/5 rounded-[32px] overflow-hidden transition-all duration-500 hover:border-[#00E5FF]/50 bg-neutral-900/20 flex flex-col justify-end p-6 shadow-2xl"
+                onClick={() => setActiveCategory(srv.id)}
+                className="group relative h-[400px] border border-white/5 rounded-[32px] overflow-hidden transition-all duration-500 hover:border-[#00E5FF]/50 bg-neutral-900/20 flex flex-col justify-end p-6 shadow-2xl cursor-pointer"
               >
                 {/* 📸 Raw HTML Image Element Layer */}
                 <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
                   <img 
                     src={srv.img} 
-                    alt={srv.title}
+                    alt={srv.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                   />
                 </div>
@@ -47,13 +48,10 @@ export default function Services({ mainServices, subPackages, activeCategory, se
                     <p className="text-[11px] text-gray-400 leading-relaxed mt-1 line-clamp-2">{srv.desc}</p>
                   </div>
                   
-                  <button 
-                    onClick={() => setActiveCategory(srv.id)} 
-                    className="text-[#00E5FF] text-xs font-black flex items-center space-x-1.5 pt-2 group-hover:space-x-3 transition-all"
-                  >
+                  <div className="text-[#00E5FF] text-xs font-black flex items-center space-x-1.5 pt-2 group-hover:space-x-3 transition-all">
                     <span>Explore Pack</span>
                     <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  </div>
                 </div>
 
               </div>

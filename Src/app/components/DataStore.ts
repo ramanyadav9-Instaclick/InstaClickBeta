@@ -157,7 +157,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Pre Wedding", 
+      name: "Pre Wedding Shoot", 
       price: 3499, 
       displayPrice: "Starting ₹3499", 
       rating: 4.8, 
@@ -165,7 +165,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Maternity", 
+      name: "Maternity Shoot", 
       price: 2999, 
       displayPrice: "Starting ₹2999", 
       rating: 4.9, 
@@ -173,7 +173,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Fashion Portfolio", 
+      name: "Fashion Portfolio Shoot", 
       price: 2499, 
       displayPrice: "Starting ₹2499", 
       rating: 4.7, 
@@ -189,7 +189,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Engagement Cover", 
+      name: "Engagement Shoot", 
       price: 1999, 
       displayPrice: "Starting ₹1999", 
       rating: 4.9, 
@@ -197,7 +197,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Outdoor Cinematic", 
+      name: "Outdoor Cinematic Shoot", 
       price: 2999, 
       displayPrice: "Starting ₹2999", 
       rating: 4.8, 
@@ -223,7 +223,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Corporate Film", 
+      name: "Corporate Shoot", 
       price: 3999, 
       displayPrice: "Starting ₹3999", 
       rating: 4.7, 
@@ -265,7 +265,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Real Estate Drone", 
+      name: "Real Estate Shoot", 
       price: 1999, 
       displayPrice: "Starting ₹1999", 
       rating: 4.7, 
@@ -281,7 +281,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Construction Cam", 
+      name: "Construction Shoot", 
       price: 2499, 
       displayPrice: "Starting ₹2499", 
       rating: 4.8, 
@@ -307,7 +307,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Anniversary Cover", 
+      name: "Anniversary Shoot", 
       price: 2999, 
       displayPrice: "Starting ₹2999", 
       rating: 4.9, 
@@ -323,7 +323,7 @@ export const subPackages: Record<string, Array<{
     },
 
     { 
-      name: "Live Concert Festival", 
+      name: "Live Concert & Festival Shoot", 
       price: 2499, 
       displayPrice: "Starting ₹2499", 
       rating: 4.9, 
