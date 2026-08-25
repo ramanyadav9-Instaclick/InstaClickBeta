@@ -62,7 +62,7 @@ export default function SocialFooter() {
         {/* Contact Us Email */}
         <a 
           href="info@instaclick.co.in" 
-          className="text-sm md:text-base font-mono font-black text-[#00E5FF] hover:underline tracking-wider transition-all"
+          className="text-sm md:text-base text-[#00E5FF] hover:underline tracking-wider transition-all"
         >
           info@instaclick.co.in 
         </a>
