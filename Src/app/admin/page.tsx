@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { XCircle, CheckCircle2, AlertTriangle, X, Plus, Edit2, Trash2, Key, UserCheck, Search, Send, Lock } from 'lucide-react';
+import InactivityHandler from "../components/InactivityHandler";
 
 interface Member {
   id: string;
@@ -515,6 +516,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#0f0f11] text-white flex font-sans">
+    <InactivityHandler onLogout={() => setIsLoggedIn(false)} />  
       {/* 🌟 Custom Theme Toast Notification */}
       {customNotification.show && (
         <div className="fixed top-5 right-5 z-[500] bg-[#18181b] border border-cyan-500/40 p-4 rounded-2xl shadow-2xl flex items-center gap-3 animate-fade-in max-w-sm">

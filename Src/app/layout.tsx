@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import UserInactivityHandler from "./components/UserInactivityHandler";
 
 export const metadata: Metadata = {
-  title: "instaclick - Premium Photography Platform",
+  title: "instaclick - Premium Shoot Booking  Platform",
   description: "Capture Every Beautiful Moment",
   icons: {
     icon: [
@@ -36,7 +37,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>,<UserInactivityHandler />{children}</body>
     </html>
   );
 }
