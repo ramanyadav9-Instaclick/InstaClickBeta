@@ -21,8 +21,13 @@ export async function POST(req: Request) {
       });
     }
 
-    const customerId = process.env.MESSAGECENTRAL_CUSTOMER_ID;
-    const authToken = process.env.MESSAGECENTRAL_AUTH_TOKEN;
+    // Support both naming styles (with or without underscore)
+    const customerId =
+      process.env.MESSAGE_CENTRAL_CUSTOMER_ID ||
+      process.env.MESSAGECENTRAL_CUSTOMER_ID;
+    const authToken =
+      process.env.MESSAGE_CENTRAL_AUTH_TOKEN ||
+      process.env.MESSAGECENTRAL_AUTH_TOKEN;
 
     if (!customerId || !authToken) {
       return NextResponse.json(
@@ -32,7 +37,8 @@ export async function POST(req: Request) {
     }
 
     // 🚀 Message Central OTP Validate Request
-    const url = `https://cpaas.messagecentral.com/verification/v3/validateOtp?countryCode=91&customerId=${customerId}&mobileNumber=${cleanNum}&verificationId=${verificationId || ''}&code=${otp}`;
+    const verificationParam = verificationId ? `&verificationId=${verificationId}` : '';
+    const url = `https://cpaas.messagecentral.com/verification/v3/validateOtp?countryCode=91&customerId=${customerId}&mobileNumber=${cleanNum}${verificationParam}&code=${otp}`;
 
     const res = await fetch(url, {
       method: 'GET',
