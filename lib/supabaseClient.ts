@@ -2,15 +2,12 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 let supabaseClient: SupabaseClient | null = null;
 
-function getSupabaseClient(): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const FALLBACK_URL = "https://gapvcmsapunprvxihyml.supabase.co";
+const FALLBACK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHZjbXNhcHVucHJ2eGloeW1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2OTM5NjQsImV4cCI6MjEwMDI2OTk2NH0.rp0ut0rYyM1-B7fzveeyCZjjNvDKP-k9N6APjWk2wPE";
 
-  if (!url || !anonKey) {
-    throw new Error(
-      "Supabase configuration is missing. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY."
-    );
-  }
+function getSupabaseClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || FALLBACK_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || FALLBACK_ANON;
 
   if (!supabaseClient) {
     supabaseClient = createClient(url, anonKey);
@@ -21,9 +18,6 @@ function getSupabaseClient(): SupabaseClient {
 
 /**
  * Lazy Supabase client.
- *
- * This prevents createClient() from executing while Next.js
- * is importing/prerendering the application during `next build`.
  */
 export const supabase = new Proxy({} as SupabaseClient, {
   get(_target, property) {
