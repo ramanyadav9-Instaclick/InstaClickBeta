@@ -8,9 +8,11 @@ const COOLDOWN_SECONDS = 60;
 
 // 🧪 FREE TESTING NUMBERS (In numbers par Message Central API call nahi jayegi aur ₹0 katega)
 const FREE_TEST_NUMBERS = [
-  '9759955388', // Aapka number (Testing)
-  '9999999999',
-  '9876543210'
+  '9758884326', // Aapka number (Testing)
+  '9411930458',
+  '9884365360',
+  '8354682086'
+
 ];
 
 export async function POST(req: Request) {

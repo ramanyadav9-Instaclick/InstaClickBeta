@@ -13,6 +13,8 @@ import SocialFooter from "./components/SocialFooter";
 import WhyChooseUs from "./components/WhyChooseUs";
 import FloatingWidgets from "./components/FloatingWidgets";
 import ContactModal from "./components/ContactModal";
+import OrderHistoryModal  from "./components/OrderHistory/OrderHistoryModal";
+
 
 import { slides, mainServices, subPackages } from "./components/DataStore";
 import { supabase } from "@/lib/supabaseClient";
