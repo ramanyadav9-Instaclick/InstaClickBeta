@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendNewBookingNotifications } from "@/lib/notifications";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -100,6 +101,18 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
+
+    // 🚀 TRIGGER NOTIFICATION TO CUSTOMER & ADMIN
+    sendNewBookingNotifications({
+      bookingId: data.booking_id,
+      customerName: data.customer_name,
+      customerPhone: data.customer_phone,
+      packageName: data.package_name,
+      totalAmount: data.total_amount,
+      advancePaid: data.advance_paid,
+      eventDate: data.event_date,
+      address: data.address,
+    }).catch((err) => console.error("Notification Error:", err));
 
     return NextResponse.json({
       success: true,

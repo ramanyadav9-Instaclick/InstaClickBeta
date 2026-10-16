@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const cleanNum = phone.toString().replace(/\D/g, '').slice(-10);
 
     // 🌟 Master Bypass (Testing और Demo के लिए हमेशा चालू)
-    if (otp === '123456' || verificationId === 'DEMO_TEST_SESSION') {
+    if (otp === '1234' || verificationId === 'DEMO_TEST_SESSION') {
       return NextResponse.json({
         success: true,
         message: 'OTP verified successfully (Demo Master OTP)',

@@ -107,7 +107,7 @@ export default function OrderHistoryModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-[#0f0f11] text-white overflow-y-auto p-4 md:p-10 flex flex-col justify-between font-sans">
-      <div className="max-w-5xl mx-auto w-full space-y-6">
+      <div className="max-w-5xl mx-auto w-full min-w-0 space-y-6">
         
         {/* Header Section */}
         <div className="flex justify-between items-center border-b border-gray-800 pb-5">
@@ -142,7 +142,7 @@ export default function OrderHistoryModal({
                 <span>Syncing live order tracking with server...</span>
               </div>
             ) : activeBooking && !isBookingCancelled ? (
-              <div className="bg-[#18181b] p-6 md:p-8 rounded-3xl border border-gray-800 space-y-6 shadow-2xl">
+              <div className="bg-[#18181b] p-6 md:p-8 rounded-3xl border border-gray-800 space-y-6 shadow-2xl w-full min-w-0">
                 
                 {/* Header Info */}
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-4 border-b border-gray-800 gap-2">
@@ -163,7 +163,7 @@ export default function OrderHistoryModal({
                 </div>
 
                 {/* 5-Step Live Tracking Stepper */}
-                <div className="py-2">
+                <div className="py-2 w-full min-w-0 overflow-hidden">
                   <TrackingStepper currentStatus={activeBooking.status} />
                 </div>
 

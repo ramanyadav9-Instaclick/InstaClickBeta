@@ -93,11 +93,9 @@ export default function AdminPanel() {
   const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
   const [contacts, setContacts] = useState<any[]>([]);
   const [activityLogs, setActivityLogs] = useState<any[]>([]);
-  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
 
   // 📥 SUPABASE FETCH FUNCTION
   const fetchDataFromSupabase = async () => {
-    setIsLoadingContacts(true);
     try {
       const { data: contactData, error: cErr } = await supabase
         .from("contacts")
@@ -118,8 +116,6 @@ export default function AdminPanel() {
       if (logsData) setActivityLogs(logsData);
     } catch (err) {
       console.error("Supabase Fetch Exception:", err);
-    } finally {
-      setIsLoadingContacts(false);
     }
   };
 
@@ -188,8 +184,8 @@ export default function AdminPanel() {
     alert(`Refund for Booking #${bookingId} marked as SENT! 💸`);
   };
 
-  // 📝 REVIEW SAVE AND LOCK HANDLER
-  const handleSaveContactReview = async (contactId: string, customerName: string, reviewNotes: string) => {
+  // 📝 REVIEW SAVE AND LOCK HANDLER (Directly aligned with updated InquiriesTab)
+  const handleSaveContactReview = async (contactId: string | number, customerName: string, reviewNotes: string) => {
     if (!reviewNotes.trim()) {
       alert("Please enter review/call notes!");
       return;
@@ -199,7 +195,7 @@ export default function AdminPanel() {
 
     // 1. Update State Locally immediately
     setContacts(prev => prev.map(c => {
-      if (c.id === contactId) {
+      if (String(c.id) === String(contactId)) {
         return {
           ...c,
           admin_notes: reviewNotes,
@@ -355,10 +351,8 @@ export default function AdminPanel() {
         {activeTab === "contact_reviews" && (
           <InquiriesTab
             inquiries={contacts}
-            currentUserId={currentUser.userId}
-            onUpdateInquiry={handleSaveContactReview}
+            onReviewSubmit={(id, name, note) => handleSaveContactReview(id, name, note)}
             onRefresh={fetchDataFromSupabase}
-            isLoading={isLoadingContacts}
           />
         )}
 
@@ -420,17 +414,23 @@ export default function AdminPanel() {
                   <div className="flex items-center gap-3 pt-2">
                     <span className="text-xs font-mono text-gray-400 font-bold">Update Live Tracker:</span>
                     <div className="flex flex-wrap gap-2">
-                      {["booked", "dispatch", "location", "completed"].map((st) => (
+                      {[
+                        { key: "booked", label: "Shoot Booked" },
+                        { key: "dispatch", label: "Dispatched" },
+                        { key: "location", label: "On Location" },
+                        { key: "shoot_done", label: "Completed" },
+                        { key: "delivered", label: "Delivered" },
+                      ].map((st) => (
                         <button
-                          key={st}
-                          onClick={() => handleUpdateShootStatus(b.id, st)}
+                          key={st.key}
+                          onClick={() => handleUpdateShootStatus(b.id, st.key)}
                           className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
-                            b.shoot_status === st
+                            b.shoot_status === st.key
                               ? "bg-[#00E5FF] text-black shadow-[0_0_10px_#00E5FF]"
                               : "bg-zinc-900 text-gray-400 border border-zinc-800 hover:text-white"
                           }`}
                         >
-                          {st}
+                          {st.label}
                         </button>
                       ))}
                     </div>

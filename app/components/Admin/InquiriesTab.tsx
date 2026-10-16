@@ -1,144 +1,154 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Lock, Send } from 'lucide-react';
 
 export interface ContactInquiry {
-  id: string;
-  name?: string;
-  customerName?: string;
-  phone?: string;
-  mobile?: string;
-  email?: string;
-  message?: string;
-  status: 'Pending' | 'Info Given' | 'Reviewed' | string;
-  spokenByMember?: string;
-  reviewed_by?: string;
-  reviewNote?: string;
+  id: string | number;
+  name: string;
+  phone: string;
+  email: string;
+  message: string;
+  status: string;
   admin_notes?: string;
+  review_note?: string;
+  spoken_by_member?: string;
+  reviewed_by?: string;
   reviewed_at?: string;
   is_reviewed?: boolean;
+  created_at?: string;
 }
 
 interface InquiriesTabProps {
   inquiries: ContactInquiry[];
-  currentUserId: string;
-  onUpdateInquiry: (id: string, name: string, note: string) => void;
-  onRefresh?: () => void;
-  isLoading?: boolean;
+  onReviewSubmit: (contactId: string | number, clientName: string, note: string) => void;
+  onRefresh: () => void;
+  searchQuery?: string;
 }
 
 export const InquiriesTab = ({
   inquiries,
-  currentUserId,
-  onUpdateInquiry,
+  onReviewSubmit,
   onRefresh,
-  isLoading = false,
+  searchQuery = '',
 }: InquiriesTabProps) => {
+  const [reviewInputMap, setReviewInputMap] = useState<{ [key: string]: string }>({});
+
+  const filterBySearch = (textArray: (string | number | undefined | null)[]) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase().trim();
+    return textArray.some((t) => t !== undefined && t !== null && t.toString().toLowerCase().includes(query));
+  };
+
+  const filteredInquiries = inquiries.filter((iq) =>
+    filterBySearch([
+      iq.name,
+      iq.phone,
+      iq.email,
+      iq.message,
+      iq.spoken_by_member,
+      iq.reviewed_by,
+      iq.admin_notes,
+      iq.review_note,
+    ])
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center border-b border-zinc-800 pb-4">
+    <div className="space-y-4">
+      <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-1">📩 Contact Forms & Customer Reviews</h2>
-          <p className="text-gray-400 text-xs">
-            View incoming customer forms, call them directly, and record talk review notes.
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span>📩 Contact Forms & Calls Review</span>
+          </h2>
+          <p className="text-xs text-gray-400 mt-0.5 font-mono">
+            Call clients, write discussion review notes, and submit to permanently lock.
           </p>
         </div>
-        {onRefresh && (
-          <button
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="px-4 py-2 bg-[#00E5FF] text-black text-xs font-bold rounded-xl hover:bg-cyan-400 transition-all flex items-center gap-2 active:scale-95"
-          >
-            {isLoading ? 'Syncing...' : '🔄 Refresh Messages'}
-          </button>
-        )}
+        <button
+          onClick={onRefresh}
+          className="px-4 py-2 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-bold cursor-pointer hover:bg-cyan-500/30 font-mono transition"
+        >
+          🔄 Refresh Inquiries
+        </button>
       </div>
 
-      {inquiries.length === 0 ? (
-        <div className="text-center py-20 bg-[#0a0a0a] border border-zinc-800 rounded-2xl text-gray-500 font-mono text-sm">
-          No contact inquiries found in database.
+      {filteredInquiries.length === 0 ? (
+        <div className="text-center py-10 border border-gray-800 rounded-2xl text-gray-500 font-mono">
+          No inquiries found.
         </div>
       ) : (
-        <div className="space-y-4">
-          {inquiries.map((iq) => {
-            const customerName = iq.name || iq.customerName || 'Unknown Customer';
-            const customerPhone = iq.phone || iq.mobile || 'No Phone';
-            const notes = iq.admin_notes || iq.reviewNote || '';
-            const reviewer = iq.reviewed_by || iq.spokenByMember || 'Admin/Member';
-            const isLocked = Boolean(iq.is_reviewed || notes || iq.status === 'Info Given' || iq.status === 'Reviewed');
+        filteredInquiries.map((iq) => {
+          const noteValue = iq.admin_notes || iq.review_note || '';
+          const isReviewed = Boolean(iq.is_reviewed || noteValue.trim());
+          const reviewerName = iq.spoken_by_member || iq.reviewed_by || 'Staff';
 
-            return (
-              <div key={iq.id} className="bg-[#18181b] border border-gray-800 p-6 rounded-2xl space-y-4 shadow-lg">
-                <div className="flex justify-between items-start border-b border-zinc-800 pb-3">
-                  <div>
-                    <h3 className="font-bold text-white text-lg">
-                      {customerName} <span className="text-[#00E5FF] font-mono text-sm">({customerPhone})</span>
-                    </h3>
-                    {iq.email && <p className="text-xs text-gray-400 font-mono">✉️ {iq.email}</p>}
-                  </div>
-                  <span
-                    className={`text-xs px-3 py-1 rounded-full font-bold font-mono border ${
-                      isLocked
-                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                        : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                    }`}
-                  >
-                    {isLocked ? '✓ Info Provided & Locked' : '⌛ Pending Review'}
-                  </span>
+          return (
+            <div
+              key={iq.id}
+              className="bg-[#18181b] border border-gray-800 hover:border-cyan-500/30 p-5 rounded-2xl space-y-3 transition shadow-lg"
+            >
+              <div className="flex flex-wrap justify-between items-start gap-2">
+                <div>
+                  <h3 className="font-bold text-white text-lg">
+                    {iq.name} <span className="text-cyan-400 font-mono">({iq.phone})</span>
+                  </h3>
+                  {iq.email && <p className="text-xs text-gray-400 font-mono">📧 {iq.email}</p>}
+                  <p className="text-xs text-gray-300 mt-1">
+                    Message: <span className="italic text-gray-200">"{iq.message}"</span>
+                  </p>
                 </div>
 
-                {iq.message && (
-                  <div className="bg-[#0f0f11] p-4 rounded-xl border border-gray-800">
-                    <span className="text-[10px] text-gray-500 font-mono uppercase block mb-1">Customer Message:</span>
-                    <p className="text-sm text-gray-200 italic">"{iq.message}"</p>
-                  </div>
-                )}
-
-                {/* Review & Lock Block */}
-                <div className="bg-[#0f0f11] p-4 rounded-xl border border-gray-800 space-y-3">
-                  <div className="flex justify-between items-center">
-                    <label className="text-xs font-mono font-bold text-gray-400 block">
-                      👨‍💼 Call Review & Discussion Notes:
-                    </label>
-                    {isLocked && (
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold border border-emerald-500/30">
-                        🔒 REVIEW LOCKED
-                      </span>
-                    )}
-                  </div>
-
-                  {isLocked ? (
-                    <div className="bg-black/60 p-3.5 rounded-lg border border-zinc-800 text-xs text-gray-300 space-y-2">
-                      <p className="italic text-cyan-300 font-medium">"{notes}"</p>
-                      <div className="text-[10px] text-gray-500 font-mono flex justify-between border-t border-zinc-800/60 pt-2">
-                        <span>Submitted by: <strong className="text-white">{reviewer}</strong></span>
-                        <span>Date: {iq.reviewed_at ? new Date(iq.reviewed_at).toLocaleString() : 'Recorded'}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <textarea
-                        id={`notes-${iq.id}`}
-                        placeholder="Type discussion details (e.g. Talked on call, quoted ₹20k for Wedding shoot)..."
-                        className="w-full bg-black border border-zinc-700 p-3 rounded-lg text-xs text-white focus:outline-none focus:border-[#00E5FF]"
-                        rows={2}
-                      />
-                      <button
-                        onClick={() => {
-                          const notesVal = (document.getElementById(`notes-${iq.id}`) as HTMLTextAreaElement).value;
-                          onUpdateInquiry(iq.id, customerName, notesVal);
-                        }}
-                        className="px-4 py-2 bg-[#00E5FF] text-black font-bold text-xs rounded-lg hover:bg-cyan-400 transition-colors"
-                      >
-                        Save Review & Lock Entry
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <span
+                  className={`text-xs font-bold px-3 py-1.5 rounded-lg border font-mono flex items-center gap-1.5 ${
+                    isReviewed
+                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                      : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                  }`}
+                >
+                  {isReviewed ? '✓ Recorded' : '⏳ Pending Review'}
+                </span>
               </div>
-            );
-          })}
-        </div>
+
+              {isReviewed ? (
+                <div className="p-3 bg-[#0a0d14] border border-cyan-500/30 rounded-xl space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-gray-400 border-b border-white/5 pb-1">
+                    <span className="flex items-center gap-1 text-cyan-400">
+                      <Lock className="w-3 h-3" /> Reviewed by: <strong className="text-white">{reviewerName}</strong>
+                    </span>
+                    {iq.reviewed_at && <span>{iq.reviewed_at}</span>}
+                  </div>
+                  <p className="text-xs text-cyan-300 font-mono pt-1">
+                    Review Note: <span className="text-white font-semibold">"{noteValue}"</span>
+                  </p>
+                </div>
+              ) : (
+                <div className="pt-2 border-t border-white/5 space-y-2">
+                  <label className="text-[11px] font-mono text-gray-400 block">
+                    Write Discussion / Call Note:
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={reviewInputMap[iq.id] || ''}
+                      onChange={(e) => setReviewInputMap({ ...reviewInputMap, [iq.id]: e.target.value })}
+                      placeholder="e.g. Discussed packages, client requested quotes..."
+                      className="flex-1 bg-[#0f0f11] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-400 font-mono"
+                    />
+                    <button
+                      onClick={() => {
+                        const note = reviewInputMap[iq.id]?.trim();
+                        if (note) onReviewSubmit(iq.id, iq.name, note);
+                      }}
+                      className="px-4 py-2 bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] cursor-pointer shrink-0"
+                    >
+                      <Send className="w-3.5 h-3.5" /> Submit & Lock
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })
       )}
     </div>
   );

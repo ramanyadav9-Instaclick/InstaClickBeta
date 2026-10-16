@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { ShoppingCart, User, ScrollText, Trash2, LogOut, PhoneCall } from "lucide-react";
+import Link from "next/link";
+import { ShoppingCart, User, ScrollText, Trash2, LogOut, PhoneCall, UserCheck } from "lucide-react";
 
 export default function Navbar({
   cartCount,
@@ -16,13 +17,14 @@ export default function Navbar({
   openLoginPopup,
   openDeleteAccountModal,
   scrollToServices,
+  openEditProfileModal,
 }: any) {
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-black/85 backdrop-blur-xl border-b border-white/5 px-8 py-3 flex items-center justify-between transition-all duration-300">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-black/85 backdrop-blur-xl border-b border-white/5 px-6 lg:px-8 py-3 flex items-center justify-between transition-all duration-300">
       
       {/* 1️⃣ Brand Logo */}
       <div 
-        className="flex items-center space-x-2 cursor-pointer" 
+        className="flex items-center space-x-2 cursor-pointer shrink-0" 
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
         <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00E5FF] to-blue-600 p-0.5 shadow-[0_0_15px_rgba(0,229,255,0.4)] shrink-0">
@@ -35,8 +37,40 @@ export default function Navbar({
         </span>
       </div>
 
-      {/* 2️⃣ Right Actions */}
-      <div className="flex items-center space-x-5">
+      {/* 2️⃣ Center Navigation Links (Dedicated Route Navigation) */}
+      <div className="hidden lg:flex items-center space-x-7 text-xs font-medium text-gray-300 tracking-wide">
+        <Link 
+          href="/" 
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="hover:text-[#00E5FF] transition-colors"
+        >
+          Home
+        </Link>
+        <button 
+          onClick={scrollToServices} 
+          className="hover:text-[#00E5FF] transition-colors cursor-pointer"
+        >
+          Services
+        </button>
+        <Link href="/portfolio" className="hover:text-[#00E5FF] transition-colors">
+          Portfolio
+        </Link>
+        <Link href="/how-it-works" className="hover:text-[#00E5FF] transition-colors">
+          How It Works
+        </Link>
+        <Link href="/about" className="hover:text-[#00E5FF] transition-colors">
+          About Us
+        </Link>
+        <button 
+          onClick={openContactModal} 
+          className="hover:text-[#00E5FF] transition-colors cursor-pointer"
+        >
+          Contact
+        </button>
+      </div>
+
+      {/* 3️⃣ Right Actions */}
+      <div className="flex items-center space-x-4">
         
         {/* Cart Icon */}
         <button 
@@ -51,12 +85,12 @@ export default function Navbar({
           )}
         </button>
 
-        {/* Book Now Button */}
+        {/* Book a Shoot Primary Button */}
         <button
           onClick={scrollToServices}
           className="px-5 py-2 bg-[#00E5FF] text-black font-black rounded-lg text-xs shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:scale-105 transition-all"
         >
-          Book Now
+          Book a Shoot
         </button>
 
         {/* User Login / Profile Dropdown Menu */}
@@ -74,7 +108,19 @@ export default function Navbar({
             {isProfileMenuOpen && (
               <div className="absolute right-0 mt-2 w-52 bg-[#0D121F] border border-white/10 rounded-2xl shadow-2xl p-2 z-50 space-y-1">
                 
-                {/* 1. Order History */}
+                {/* 1. Edit Profile & Address Vault */}
+                <button
+                  onClick={() => {
+                    if (openEditProfileModal) openEditProfileModal();
+                    setIsProfileMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2.5 text-xs font-bold text-gray-200 hover:bg-[#00E5FF]/10 hover:text-[#00E5FF] rounded-xl transition-all flex items-center space-x-2.5"
+                >
+                  <UserCheck className="w-4 h-4 text-[#00E5FF]" />
+                  <span>Edit Profile</span>
+                </button>
+
+                {/* 2. Order History */}
                 <button
                   onClick={() => {
                     setShowHistoryModal(true);
@@ -86,7 +132,7 @@ export default function Navbar({
                   <span>Order History</span>
                 </button>
 
-                {/* 2. Contact Us */}
+                {/* 3. Contact Us */}
                 <button
                   onClick={() => {
                     openContactModal();
@@ -98,7 +144,7 @@ export default function Navbar({
                   <span>Contact Us</span>
                 </button>
 
-                {/* 3. Delete Account */}
+                {/* 4. Delete Account */}
                 <button
                   onClick={() => {
                     openDeleteAccountModal();
@@ -112,7 +158,7 @@ export default function Navbar({
 
                 <div className="border-t border-white/10 my-1" />
 
-                {/* 4. Logout */}
+                {/* 5. Logout */}
                 <button
                   onClick={() => {
                     setIsLoggedIn(false);
